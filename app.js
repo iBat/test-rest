@@ -3,12 +3,20 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const index = require('./routes/index');
 
 const app = express();
 
-app.use(logger('dev'));
+if('development' === app.get('env')) {
+    mongoose.set('debug', true);
+    app.use(logger('dev'));
+}
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/pill');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

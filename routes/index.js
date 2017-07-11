@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../models/user');
 
 /*
  * реализовать REST API используя https:// протокол
@@ -27,7 +28,15 @@ router.get('/', (req, res) => {
   res.send('Ok');
 });
 
-router.get('/CreateUser/:userId', (req, res) => {
+router.get('/CreateUser/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const userDoc = await User.findById(userId);
+
+    if (userDoc) {
+        res.status(409);
+        return res.json({ status: 'already exists' });
+    }
+    await User.create({ _id: userId });
     res.json({ status: 'success' });
 });
 
