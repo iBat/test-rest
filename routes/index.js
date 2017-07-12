@@ -40,12 +40,47 @@ router.get('/CreateUser/:userId', async (req, res) => {
     res.json({ status: 'success' });
 });
 
-router.post('/SaveProfile/:userId', (req, res) => {
-    res.json({ status: 'success' });
+router.post('/SaveProfile/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const userDoc = await User.findById(userId);
+
+    if (!userDoc) {
+        res.status(404);
+        return res.json({ status: 'user not found' });
+    }
+
+    const chunks = [];
+
+    req.on('data', data => {
+        chunks.push(data);
+    });
+
+    req.on('end', async () => {
+        userDoc.profile = Buffer.concat(chunks);
+        await userDoc.save();
+        res.json({ status: 'success' });
+    });
+
+    req.on('error', () => {
+        res.status(500);
+        res.json({ status: 'error' });
+    });
 });
 
-router.get('/GetProfile/:userId', (req, res) => {
-    res.json({ status: 'success' });
+router.get('/GetProfile/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const userDoc = await User.findById(userId);
+
+    if (!userDoc) {
+        res.status(404);
+        return res.json({ status: 'user not found' });
+    }
+
+    if (!userDoc.profile) {
+        return res.end();
+    }
+
+    res.send(userDoc.profile);
 });
 
 module.exports = router;

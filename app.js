@@ -17,8 +17,8 @@ if('development' === app.get('env')) {
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/pill');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.raw());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', index);
 
