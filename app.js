@@ -1,8 +1,6 @@
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const index = require('./routes/index');
@@ -15,10 +13,7 @@ if('development' === app.get('env')) {
 }
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/pill');
-
-// app.use(bodyParser.raw());
-// app.use(bodyParser.urlencoded({ extended: false }));
+mongoose.connect(`mongodb://${'development' === app.get('env') ? 'localhost' : 'mongo-pill'}/pill`);
 
 app.use('/', index);
 

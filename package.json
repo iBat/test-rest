@@ -1,9 +1,14 @@
 {
   "name": "digitalpill",
-  "version": "0.0.0",
+  "version": "17.7.2",
   "private": true,
+  "config": {
+    "docker_register": "registry.modxvm.com:5000/xvm/test"
+  },
   "scripts": {
-    "start": "node ./bin/www"
+    "build": "docker build --force-rm -t $npm_package_config_docker_register:$npm_package_version .",
+    "push": "docker push $npm_package_config_docker_register:$npm_package_version",
+    "start": "node --harmony bin/www"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
